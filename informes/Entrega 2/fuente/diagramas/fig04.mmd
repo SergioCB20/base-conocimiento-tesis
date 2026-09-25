@@ -1,0 +1,6 @@
+flowchart LR
+    DS([Científico de Datos]) -->|configura contratos y ejecuta el pipeline| SYS
+    AUD([Auditor del Sistema]) -->|consulta trazabilidad y reportes| SYS
+    SRC[(Fuente de datos<br/>Sistema externo<br/>datos tabulares CSV)] -->|datos crudos| SYS
+    ORQ[Orquestador CI/CD<br/>Sistema externo<br/>GitHub Actions] -->|triggers CI / CD / CT| SYS
+    SYS[[Sistema MLOps Fairness QA<br/>Valida, entrena, despliega y monitorea<br/>modelos supervisados con compuertas de equidad]]

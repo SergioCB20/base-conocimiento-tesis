@@ -1,0 +1,12 @@
+flowchart TB
+    ING[Ingestor de datos<br/>hash del lote · columnas prohibidas] --> VAL[Validador de esquema<br/>Pandera]
+    VAL --> REP[Evaluador de representatividad]
+    REP --> G1{QA Gate 1<br/>Contrato C1}
+    G1 -->|falla| X1[[Bloqueo · exit 1]]
+    G1 -->|pasa| T1[Paso 1: imputación]
+    T1 --> T2[Paso 2: escalado]
+    T2 --> T3[Paso 3: codificación]
+    T1 & T2 & T3 --> PX[Evaluador de filtración<br/>AUC de Z dado X, estratificado por Y<br/>antes y después de cada paso]
+    PX --> G2{QA Gate 2<br/>Contrato C2}
+    G2 -->|falla: indica paso y variables| X2[[Bloqueo · exit 1]]
+    G2 -->|pasa| FS[(Variables versionadas<br/>DVC)]

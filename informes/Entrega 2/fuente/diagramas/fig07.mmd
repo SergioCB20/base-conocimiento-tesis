@@ -1,0 +1,11 @@
+flowchart TB
+    TRG([Trigger CI]) --> LD[Cargador de variables<br/>versión DVC]
+    LD --> TR[Entrenador de modelo<br/>scikit-learn]
+    TR --> EV[Evaluador de disparidad<br/>SPD · EOD · DI con IC bootstrap]
+    EV --> G3{QA Gate 3<br/>Contrato C3}
+    G3 -->|pasa| REG[(Registro del modelo aprobado<br/>MLflow)]
+    G3 -->|falla| REM[Módulo de remediación<br/>ThresholdOptimizer · equalized odds]
+    REM --> EV2[Evaluador de disparidad<br/>modelo mitigado]
+    EV2 --> G3B{QA Gate 3<br/>reevaluación}
+    G3B -->|pasa| REG
+    G3B -->|falla| X3[[Bloqueo · exit 1]]

@@ -1,0 +1,9 @@
+flowchart TB
+    ML[(MLflow)] --> EX[Exportador de linaje<br/>RDFLib]
+    ONT[/Ontología de Fairness<br/>PROV-O + DQV/] --> EX
+    EX --> SH[Validador SHACL<br/>pySHACL]
+    SH -->|conforme| KG[(Repositorio RDF<br/>RDFLib / Oxigraph)]
+    SH -->|no conforme| ERR[[Error de trazabilidad]]
+    KG --> Q[Motor de consultas SPARQL<br/>preguntas de competencia]
+    Q --> REP[Generador de reporte de cumplimiento<br/>PDF]
+    AUD([Auditor del Sistema]) --> Q

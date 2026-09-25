@@ -1,0 +1,11 @@
+flowchart TB
+    TRG([Trigger CD]) --> SC[Scorer por lotes<br/>modelo aprobado]
+    SC --> CAP[Captura y seudonimización<br/>atributo protegido separado]
+    SC --> RR[Generador de razones de rechazo<br/>SHAP LinearExplainer]
+    CAP --> DD[Monitor de deriva de datos<br/>Evidently]
+    CAP --> BD[Monitor de deriva del sesgo<br/>SPD · EOD · DI por lote]
+    DD --> G4{QA Gate 4<br/>Contrato C4}
+    BD --> G4
+    G4 -->|falla| AL[Generador de alertas]
+    AL --> CT([Trigger CT: reentrenamiento → Zona 1])
+    G4 -->|pasa| OK[Registro del lote en MLflow]

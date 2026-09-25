@@ -1,0 +1,24 @@
+flowchart TB
+    DS([Científico de Datos]) -->|contratos YAML| CE
+    SRC[(Fuente de datos)] -->|datos crudos| Z1
+    ORQ[Orquestador CI/CD] -->|Trigger CI| Z2
+    ORQ -->|Trigger CD| Z3
+    subgraph SYS[Sistema MLOps Fairness QA]
+      CE[[Motor de contratos<br/>YAML + pydantic + pytest]]
+      Z1[Zona 1: Ingesta y transformación<br/>pandas · Pandera · DVC<br/>QA Gate 1 · QA Gate 2]
+      Z2[Zona 2: CI, entrenamiento y QA del modelo<br/>scikit-learn · Fairlearn<br/>QA Gate 3 + remediación]
+      Z3[Zona 3: Scoring por lotes y monitoreo<br/>Evidently · monitor de deriva del sesgo · SHAP<br/>QA Gate 4]
+      Z4[Zona 4: Trazabilidad semántica<br/>RDFLib · PROV-O · DQV · SHACL · SPARQL]
+      ML[(Canal de linaje<br/>MLflow Tracking & Registry)]
+    end
+    CE -. evalúa .-> Z1
+    CE -. evalúa .-> Z2
+    CE -. evalúa .-> Z3
+    Z1 -->|lote validado + hash DVC| Z2
+    Z2 -->|modelo aprobado| Z3
+    Z3 -->|alerta de deriva: Trigger CT| Z1
+    Z1 -->|metadatos| ML
+    Z2 -->|metadatos| ML
+    Z3 -->|metadatos| ML
+    ML -->|exportación RDF| Z4
+    AUD([Auditor del Sistema]) -->|consultas SPARQL · reporte PDF| Z4
